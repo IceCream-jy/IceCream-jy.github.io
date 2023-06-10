@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>redis on Owl Dawn</title>
+    <link>https://icecream-jy.github.io/categories/redis/</link>
+    <description>Recent content in redis on Owl Dawn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 27 Feb 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://icecream-jy.github.io/categories/redis/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>redis</title>
+      <link>https://icecream-jy.github.io/redis/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/redis/</guid>
+      <description>Redis_note 6.0.9 版本源码 数据结构 SDS 定义结构： struct __attribute__ ((__packed__)) sdshdr64 { uint64_t len; /* used 已使用的字节长度 */ uint64_t alloc; /* excluding the header and null terminator *///不包括头部和&amp;#39;\0&amp;#39;截止符 unsigned char</description>
+    </item>
+    
+  </channel>
+</rss>

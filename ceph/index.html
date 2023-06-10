@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Owl Dawn">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="/img/amiya.jpg">
+    <meta property="twitter:image" content="/img/amiya.jpg" />
+    
+
+    
+    <meta name="title" content="ceph" />
+    <meta property="og:title" content="ceph" />
+    <meta property="twitter:title" content="ceph" />
+    
+
+    
+    <meta name="description" content="OwlDawn，程序员, 动漫爱好者 | 这里是 OwlDawn 的博客，与你一起发现更大的世界。">
+    <meta property="og:description" content="OwlDawn，程序员, 动漫爱好者 | 这里是 OwlDawn 的博客，与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="OwlDawn，程序员, 动漫爱好者 | 这里是 OwlDawn 的博客，与你一起发现更大的世界。" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="OwlDawn, OwlDawn的博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>ceph | OwlDawn的博客 | OwlDawn Blog</title>
+
+    <link rel="canonical" href="/ceph/">
+
+    
+    
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.15.1/css/all.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Owl Dawn</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ceph">ceph</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cgroup">cgroup</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/coroutine">coroutine</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cpp">cpp</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/leveldb">leveldb</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/linux">linux</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/raft">raft</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/redis">redis</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97">无锁队列</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/archive/">ARCHIVE</a></li>
+                    
+                        <li><a href="/notes/">NOTES</a></li>
+                    
+                        <li><a href="/about/">ABOUT</a></li>
+                    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/amiya.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/ceph" title="ceph">
+                            ceph
+                        </a>
+                        
+                    </div>
+                    <h1>ceph</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                OwlDawn
+                             
+                            on 
+                            Saturday, June 10, 2023
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="存储设备">存储设备</h1>
+<h3 id="das">DAS</h3>
+<p>直接附加存储</p>
+<p>IDE，SATA，SCSI，SAS，USB</p>
+<h3 id="nas">NAS</h3>
+<p>网络附加存储</p>
+<p>NFS，CIFS</p>
+<h3 id="san">SAN</h3>
+<p>SCSI，FC SAN，iSCSI</p>
+<h1 id="hdfs">HDFS</h1>
+<p>Hadoop Distributed FileSystem</p>
+<p>存在元数据服务器，容易形成性能瓶颈</p>
+<h1 id="ceph">Ceph</h1>
+<p>统一的分布式存储系统，提供较好的性能、可靠性和可扩展性</p>
+<p>Ceph 是一个<strong>对象</strong>式存储系统，它把每一个待管理的数据流（如一个文件）切分到一到多个固定大小的对象数据，并以其作为原子单元完成数据存取</p>
+<p>对象数据的底层存储服务是由多个主机（host）组成的存储集群，该集群也被称之为 RADOS（Reliable Automatic Distributed Object Store）存储集群，即可靠、自动化、分布式对象存储系统</p>
+<p>librados 是 RADOS 存储集群的 API</p>
+<p>RadosGW、RBD、CephFS 都是 RADOS 存储服务的客户端，它们把 RADOS 的存储服务接口（librados）分别从不同的角度做了进一步抽象，因而各自适用于不同的应用场景。</p>
+<p>CephFS 不依赖 librados，文件系统接口。需要守护进程 MDS 作为文件系统 server</p>
+<p>RadowGW 提供 restful API 接口，可提供 http/https 访问</p>
+<p>RBD 基于内核模块（librbd）由客户端主机进行分区格式化，使用最广泛</p>
+<p>设计思想</p>
+<ul>
+<li>采用具有计算能力的服务器作为存储系统的存储节点，即充分发挥节点的计算能力，以实现高可靠，高可扩展性等特性；</li>
+<li>去除中心点，避免单点故障，同时避免扩展时的规模和性能瓶颈。</li>
+</ul>
+<p>
+  <img src="pic/2099201-078462bcc3910426.webp" alt="">
+
+</p>
+<p>RADOS 对象存储系统是 Ceph 的基石。</p>
+<p>对象存储和块存储，文件存储等存储形态不同，它有两个显著的特征：</p>
+<p>（1）采用 K/V 方式的 Restful Web API 接口来进行数据的读写操作；</p>
+<p>（2）扁平的数据组织结构。文件系统采用树状存储方式，比较直观，然而，随着云存储时代的到来，存储系统的规模不断扩大，树状存储方式难以大规模扩展的弊端便暴露了出来。对象存储放弃了目录树的组织结构，采用了扁平化的数据组织方式，使得存储系统可以无限扩容，更加符合云服务中的存储，归档和备份的需求。一般分为三级，账户/桶/对象。</p>
+<p>
+  <img src="pic/image-20230527180312698.png" alt="image-20230527180312698">
+
+</p>
+<p>所有对象都存储在同一个平面上，没有文件系统</p>
+<p>存储被划分为多个分区，即存储池，存储池大小取决于底层的存储空间，每个存储池可进一步划分为名称空间。每个存储池内部会有 PG 存在。PG 是抽象的概念。数据应该存在哪里由 CRUSH 决定，即将对 对象 做一致性哈希计算，寻找对应的 PG。根据 PG 找到能够存放的 OSD 存储</p>
+<ul>
+<li>
+<p><strong>Monitor</strong> 一个 Ceph 集群需要多个 Monitor 组成的小集群，它们通过 Paxos 同步数据，用来保存 OSD 的元数据。为整个存储集群提供全局的配置和系统信息</p>
+</li>
+<li>
+<p><strong>OSD</strong>  全称 Object Storage Device，也就是负责响应客户端请求返回具体数据的进程。一个 Ceph 集群一般都有很多个 OSD。</p>
+</li>
+<li>
+<p><strong>MDS</strong>  全称 Ceph Metadata Server，是 CephFS 服务依赖的元数据服务。</p>
+</li>
+<li>
+<p><strong>Object</strong>  最底层的存储单元是 Object 对象，每个 Object 包含元数据和原始数据。</p>
+</li>
+<li>
+<p><strong>PG</strong>  全称 Placement Grouops，归置组，是一个逻辑的概念，一个 PG 包含多个 OSD。引入 PG 这一层其实是为了更好的分配数据和定位数据。</p>
+</li>
+<li>
+<p><strong>RADOS</strong>  全称 Reliable Autonomic Distributed Object Store，是 Ceph 集群的精华，用户实现数据分配、Failover 等集群操作。</p>
+</li>
+<li>
+<p><strong>Libradio</strong>  是 Rados 提供库，因为RADOS是协议很难直接访问，因此上层的 RBD、RGW 和 CephFS 都是通过 librados 访问的，目前提供PHP、Ruby、Java、Python、C和C++支持。</p>
+</li>
+<li>
+<p><strong>CRUSH</strong> 是 Ceph 使用的数据分布算法，类似一致性哈希，让数据分配到预期的地方。</p>
+</li>
+<li>
+<p><strong>RBD</strong>  全称 RADOS block device，是 Ceph 对外提供的块设备服务。</p>
+</li>
+<li>
+<p><strong>RGW</strong> 全称 RADOS gateway，是Ceph 对外提供的对象存储服务，接口与S3和Swift兼容。</p>
+</li>
+<li>
+<p><strong>CephFS</strong>  全称 Ceph File System，是 Ceph 对外提供的文件系统服务。</p>
+</li>
+</ul>
+<h3 id="存储类型">存储类型</h3>
+<ul>
+<li>
+<p>块存储</p>
+</li>
+<li>
+<p>文件存储</p>
+</li>
+<li>
+<p>对象存储</p>
+</li>
+</ul>
+<h2 id="rados">RADOS</h2>
+<p>RADOS（Reliable,Autonomic Distributed Object Store）在动态变化和异质结构的存储设备机群之上提供一种稳定、可扩展、高性能的单一逻辑对象(Object)存储接口和能够实现节点的自适应和自管理的存储系统</p>
+<p>事实上，RADOS也可以单独作为一种分布式数据存储系统，给适合相应需求的分布式文件系统提供数据存储服务。</p>
+<p>
+  <img src="pic/20140604105227156.jpg" alt="">
+
+</p>
+<p>主要包括两个部分：</p>
+<ul>
+<li>
+<p>由数目可变的大规模 OSDs（Object Storage Devices）组成的机群，负责存储所有的 Objects 数据；</p>
+</li>
+<li>
+<p>由少量 Monitors 组成的强耦合、小规模机群，负责管理 Cluster Map，其中 Cluster Map 是整个 RADOS 系统的关键数据结构，管理机群中的所有成员、关系、属性等信息以及数据的分发。</p>
+</li>
+</ul>
+<h3 id="osd">OSD</h3>
+<p>对象存储设备（每个磁盘相当于一个 OSD ）</p>
+<p>集群的存储节点，用于数据存储和维护。实际上OSD就是一台安装了操作系统的服务器</p>
+<p>每个 OSD 都具有一定的计算能力。每个 OSD 的系统上都有一个守护进程 OSD Daemon。</p>
+<p>Daemon 负责与 Monitors 集群，其他 OSD 进行通信，维护系统状态，与其他 OSD 共同完成数据存储与维护；与客户端 Clients 通信完成各种数据对象操作。</p>
+<p>一般 OSD 上的对象存储以 4MB 大小为一个单元，由标识符，二进制数和元数据组成。</p>
+<p>
+  <img src="pic/v2-b02a53938ebcfff7783af80104a3c888_1440w.webp" alt="">
+
+</p>
+<p>一般至少存在三个 OSD 做冗余和高可用</p>
+<h3 id="clients">Clients</h3>
+<p>ceph 的客户端，提供 RBD（块存储）, CephFS（文件存储）RadosGW（对象存储）三种接口，即包含这三种的客户端。其中 RadosGW 提供了兼容 S3 和 Swift 的对象存储接口。客户端通过这几种接口都可以向 RADOS 集群发送数据，RADOS 将这些数据存储为对象，每个对象是文件系统的一个文件，存储在 OSD 的存储设备上。OSD Daemon 负责处理存储设备上的读写操作。</p>
+<h3 id="monitors">Monitors</h3>
+<p>RADOS 的监视器集群，<strong>提供集群的元数据</strong>。Monitor 是一个独立部署的<strong>守护进程</strong>，一个 Monitor 可以监视一个 Ceph 存储集群，但是为了避免 Monitor 单点故障，通过组成 Monitors 集群来保证高可用。Monitors 集群通过 Paxos 分布式一致性算法来保证数据同步。<strong>Monitors 用于记录存储集群中所有的 OSD 状态</strong>，形成集群运行图的主副本，包括集群成员，状态，变更等。集群运行图会被发送至全体 OSD 节点和客户端，OSD 依据集群运行图进行数据存储和维护；客户端根据集群运行图进行数据寻址。</p>
+<p>Monitor 并不会主动轮询 OSD 的状态，而是 OSD 主动上报，比如新 OSD 加入集群，或者 OSD 本身发生异常。收到上报信息后 Monitor 更新集群运行图并重新向 OSD 和客户端分发。OSD 的状态影响着数据的分配，所以监控 OSD 的状态是 Monitor 的主要工作之一。</p>
+<p>负责认证，维护集群的认证信息（协议 CephX）</p>
+<h3 id="manager">Manager</h3>
+<p>L 版引入，无状态。跟踪运行时的指标数据、集群当前状态（包括存储空间利用率，性能指标，系统负载），一般至少存在两个 Mgr</p>
+<h3 id="cluster-map">Cluster Map</h3>
+<p>存储机群的管理，唯一的途径是 Cluster Map 通过对 Monitor Cluster 操作完成。</p>
+<p>Cluster Map 是整个 RADOS 系统的核心数据结构，其中<strong>指定了机群中的 OSDs 信息和所有数据的分布情况</strong>。所有涉及到 RADOS 系统的 Storage 节点和 Clients 都有最新 epoch 的 Cluster Map 副本。因为 Cluster Map 的特殊性，Client 向上提供了非常简单的接口实现将整个存储机群抽象为单一的逻辑对象存储结构。</p>
+<p>Cluster Map 的更新由 OSD 的状态变化或者其他事件造成数据层的变化驱动，每一次 Cluster Map 更新都需要将 map epoch 增加，map epoch 使 Cluster Map 在所有节点上的副本都保持同步，同时，map epoch 可以使一些过期的 Cluster Map 能够通过通信对等节点及时更新。</p>
+<p>在大规模的分布式系统中，OSDs 的 failures/recoveries 是常见的，所以，ClusterMap 的更新就比较频繁，如果将整个 ClusterMap 进行分发或广播显然会造成资源的浪费，RADOS 采用分发 incremental map 的策略避免资源浪费，其中 incremental map 仅包含了两个连续 epoch 之间 ClusterMap 的增量信息。</p>
+<p>
+  <img src="pic/image-20230528002435422.png" alt="image-20230528002435422">
+
+</p>
+<p>FileStore 通过文件系统存储</p>
+<p>BlueStore 直接操作磁盘存储。</p>
+<h2 id="部署工具">部署工具</h2>
+<p>ceph-deploy</p>
+<p>ceph-ansible</p>
+<p>ceph-chef</p>
+<p>pippet-ceph</p>
+
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2023/06/09/coroutine/" data-toggle="tooltip" data-placement="top" title="c&#43;&#43; 无锁队列">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                </ul>
+                
+
+                
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/cgroup" title="cgroup">
+                            cgroup
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                        <li><a target="_blank" href="https://gitee.com/icecream-jy">OwnDawn 的 gitee</a></li>
+                        
+                        <li><a target="_blank" href="https://github.com/IceCream-jy">OwnDawn 的 github</a></li>
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">                  
+                    
+                    <li>
+                        <a href="mailto:youremail@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/your%20wechat%20qr%20code%20image">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/yourgithub">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yourlinkedinid">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/yourstackoverflowid">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Owl Dawn" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Owl Dawn 2023
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+</body>
+</html>

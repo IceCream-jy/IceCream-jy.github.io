@@ -13,7 +13,16 @@
       <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
       
       <guid>https://icecream-jy.github.io/2023/02/27/cgroup/</guid>
-      <description>Cgroup v2 Control Groups，linux 内核提供的物力资源隔离机制，实现对 linux 进程或进程组的资源限制、隔离和统计 组成 cgroup 主要有两个组成部分： core - 负责分层组</description>
+      <description>Cgroup v2 Control Groups，linux 内核提供的物理资源隔离机制，实现对 linux 进程或进程组的资源限制、隔离和统计 功能： 资源限制 优先级控制：不同的组可以有</description>
+    </item>
+    
+    <item>
+      <title>Cgroup v1 和 v2 的区别</title>
+      <link>https://icecream-jy.github.io/2023/03/29/cgroup/v1v2/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/2023/03/29/cgroup/v1v2/</guid>
+      <description>Cgroup v1 和 v2 的区别 cgroup v1 允许任意数量的层次结构 v1 被弃用的核心功能 不支持包括命名层次在内的多个层次结构 不支持所有 v1 安装选项 tasks 文件被删除，cgroup</description>
     </item>
     
   </channel>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Owl Dawn">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="/img/amiya.jpg">
+    <meta property="twitter:image" content="/img/amiya.jpg" />
+    
+
+    
+    <meta name="title" content="分布性一致算法" />
+    <meta property="og:title" content="分布性一致算法" />
+    <meta property="twitter:title" content="分布性一致算法" />
+    
+
+    
+    <meta name="description" content="OwlDawn，程序员, 动漫爱好者 | 这里是 OwlDawn 的博客，与你一起发现更大的世界。">
+    <meta property="og:description" content="OwlDawn，程序员, 动漫爱好者 | 这里是 OwlDawn 的博客，与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="OwlDawn，程序员, 动漫爱好者 | 这里是 OwlDawn 的博客，与你一起发现更大的世界。" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="OwlDawn, OwlDawn的博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>分布性一致算法 | OwlDawn的博客 | OwlDawn Blog</title>
+
+    <link rel="canonical" href="/2023/06/09/raft/">
+
+    
+    
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.15.1/css/all.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Owl Dawn</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ceph">ceph</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cgroup">cgroup</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/coroutine">coroutine</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cpp">cpp</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/leveldb">leveldb</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/linux">linux</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/raft">raft</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/redis">redis</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97">无锁队列</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/archive/">ARCHIVE</a></li>
+                    
+                        <li><a href="/notes/">NOTES</a></li>
+                    
+                        <li><a href="/about/">ABOUT</a></li>
+                    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/amiya.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/%E5%88%86%E5%B8%83%E6%80%A7%E4%B8%80%E8%87%B4%E7%AE%97%E6%B3%95" title="分布性一致算法">
+                            分布性一致算法
+                        </a>
+                        
+                    </div>
+                    <h1>分布性一致算法</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                OwlDawn
+                             
+                            on 
+                            Monday, February 27, 2023
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h2 id="分布式一致性算法">分布式一致性算法</h2>
+<p>分布式一致性问题，简单的说，就是在一个或多个进程提议了一个值应当是什么后，使系统中所有进程对这个值达成一致意见。</p>
+<p>如果在一个不出现故障的系统中，很容易解决分布式一致性问题。但是实际分布式系统一般是基于消息传递的异步分布式系统，进程可能会慢、被杀死或者重启，消息可能会延迟、丢失、重复、乱序等。</p>
+<h3 id="cap">CAP</h3>
+<ul>
+<li><strong>C 一致性</strong>（consistency）一个写操作返回成功，那么之后的读请求都必须读到这个新数据；如果返回失败，那么所有读操作都不能读到这个数据。所有节点访问同一份最新的数据。</li>
+<li><strong>A 可用性</strong>（Availiable）对数据更新具备高可用性，请求能够及时处理，不会一直等待，即使出现节点失效。</li>
+<li><strong>P 分区容错性</strong>（Partition tolerance）能容忍网络分区，在网络断开的情况下，被分隔的节点仍能正常对外提供服务。</li>
+</ul>
+<p>C、A、P三者不能同时满足，最多只能满足其中两个。</p>
+<h3 id="多副本状态机">多副本状态机</h3>
+<p>多副本状态机是指多台机器具有完全相同的状态，并且运行完全相同的确定性状态机。</p>
+<p>多副本状态机在分布式系统中被用来解决各种容错问题。</p>
+<p>如集中式的选主或互斥算法中的协调者（coordinator）。</p>
+<p>集中式的领导者或互斥算法逻辑简单，但最大的问题是协调者的单点故障问题，通过采用多副本状态机来实现协调者实现了高可用的“单点”，回避了单点故障。</p>
+<p>GFS，HDFS，RAMCloud 等典型地使用一个独立的多副本状态机来管理领导者选举与保存集群配置信息，以备节点宕机后信息能够保持。</p>
+<p>Chubby 与 ZooKeeper 以及 Boxwood 等都是使用多副本状态机的例子。</p>
+<p>多副本状态机的每个副本上都保存有完全相同的操作日志，保证所有状态机副本按照相同的顺序执行相同的操作，这样由于状态机是确定性的，则会得到相同的状态。</p>
+<p><strong>保证复制到各个服务器上的日志的一致性正是分布式一致性算法的工作。</strong></p>
+<h2 id="paxos">Paxos</h2>
+<h2 id="raft">Raft</h2>
+<p>将一致性分解为多个子问题：Leader选举（Leader election）、日志同步（Log replication）、安全性（Safety）、日志压缩（Log compaction）、成员变更（Membership change）等</p>
+<p>Raft 将系统中的角色分为</p>
+<ul>
+<li>Leader 接受客户端请求，并向 follower 同步请求日志，当日志同步到大多数节点上后告诉 Follower 提交日志</li>
+<li>Follower 接受并持久化 Leader 同步的日志，在 Leader 告知日志可以提交后，提交日志</li>
+<li>Candidate Leader 选举过程中的临时角色</li>
+</ul>
+<p>Raft 要求系统在任意时刻最多只有一个 Leader，正常工作期间只有 Leader 和 Followers</p>
+<p>
+  <img src="pic/v2-7f64a2df8f8817932ed047d35878bca9_1440w.webp" alt="">
+
+</p>
+<p>Follower 只响应其他服务器的请求。如果 Follower 超时没有收到 Leader 的消息，它会成为一个 Candidate 并且开始一次 Leader 选举。收到大多数服务器投票的 Candidate 会成为新的 Leader。Leader 在宕机之前会一直保持 Leader 的状态。</p>
+<p>
+  <img src="pic/v2-d3cc1cb525ac72dc59ed34148cb3199c_1440w.png" alt="">
+
+</p>
+<p>Raft 算法将时间分为一个个的任期（term），每一个 term 的开始都是 Leader 选举。在成功选举 Leader 之后，Leader 会在整个 term 内管理整个集群。如果 Leader 选举失败，该 term 就会因为没有 Leader 而结束。</p>
+<h3 id="leader-选举">Leader 选举</h3>
+<p>使用心跳（heartbeat）触发 Leader 选举</p>
+<p>初始化后，Leader 向所有 Follower 周期性发送 heartbeat，如果 Follower 在选举超时时间内没有收到 Leader 的 heartbeat，就会等一段随机的时间后再发起一次 Leader 选举</p>
+<p>Follower 将其当前 term 加一然后转换为 Candidate。它首先给自己投票并且给集群中的其他服务器发送 RequestVote RPC 。结果有以下三种情况：</p>
+<ul>
+<li>赢得了多数的选票，成功选举为 Leader；</li>
+<li>收到了 Leader 的消息，表示有其它服务器已经抢先当选了 Leader；</li>
+<li>没有服务器赢得多数的选票，Leader 选举失败，等待选举时间超时后发起下一次选举。</li>
+</ul>
+<p>选举出 Leader 后，Leader 通过定期向所有 Followers 发送心跳信息维持其统治。若 Follower 一段时间未收到 Leader 的心跳则认为 Leader 可能已经挂了，再次发起 Leader 选举过程。</p>
+<h3 id="日志同步">日志同步</h3>
+<p>Leader 选出后，就开始接收客户端的请求。Leader 把请求作为日志条目（Log entries）加入到它的日志中，然后并行的向其他服务器发起 AppendEntries RPC 复制日志条目。当这条日志被复制到大多数服务器上，Leader 将这条日志应用到它的状态机并向客户端返回执行结果。</p>
+<p>
+  <img src="pic/v2-7cdaa12c6f34b1e92ef86b99c3bdcf32_1440w.webp" alt="">
+
+</p>
+<p>某些 Followers 可能没有成功的复制日志，Leader 会无限的重试 AppendEntries RPC 直到所有的 Followers 最终存储了所有的日志条目。</p>
+<p>日志由有序编号（log index）的日志条目组成。每个日志条目包含它被创建时的任期号（term），和用于状态机执行的命令。如果一个日志条目被复制到大多数服务器上，就被认为可以提交（commit）了。</p>
+<p>保证：</p>
+<ul>
+<li>
+<p>如果不同日志中的两个条目有着相同的索引和任期号，则它们所存储的命令是相同的。</p>
+<p>原因：Leader 在一个 term 内在给定的一个 log index 最多创建一条日志条目，同时该条目在日志中的位置也从来不会改变。</p>
+</li>
+<li>
+<p>如果不同日志中的两个条目有着相同的索引和任期号，则它们之前的所有条目都是完全一样的。</p>
+<p>原因： AppendEntries 的一个简单的一致性检查。当发送一个 AppendEntries RPC 时，Leader 会把新日志条目紧接着之前的条目的 log index 和 term 都包含在里面。如果 Follower 没有在它的日志中找到 log index 和 term 都相同的日志，它就会拒绝新的日志条目。</p>
+</li>
+</ul>
+<p>leader 和 follower 日志不一致的情况：Leader 崩溃可能会导致日志不一致，旧的 Leader 可能没有完全复制完日志中的所有条目。</p>
+<p>
+  <img src="pic/v2-d36c587901391cae50788061f568d24f_1440w.webp" alt="">
+
+</p>
+<p>Leader 会从后往前试，每次 AppendEntries 失败后尝试前一个日志条目，直到成功找到每个 Follower 的日志一致位点，然后向后逐条覆盖 Followers 在该位置之后的条目。</p>
+<h3 id="安全性">安全性</h3>
+<p><strong>拥有最新的已提交的 log entry 的 Follower 才有资格成为 Leader。</strong></p>
+<p>这个保证是在 RequestVote RPC 中做的，Candidate 在发送 RequestVote RPC 时，要<strong>带上自己的最后一条日志的 term 和 log index</strong>，其他节点收到消息时，<strong>如果发现自己的日志比请求中携带的更新，则拒绝投票</strong>。日志比较的原则是，如果本地的最后一条 log entry 的 term 更大，则 term 大的更新，如果 term 一样大，则 log index 更大的更新。</p>
+<p>Leader 只能推进 commit index 来提交当前 term 的已经复制到大多数服务器上的日志，旧 term 日志的提交要等到提交当前 term 的日志来间接提交（log index 小于 commit index 的日志被间接提交）</p>
+<p><strong>一种不安全情况：</strong></p>
+<p>
+  <img src="pic/1089769-20181216202438174-260853001.png" alt="">
+
+</p>
+<p>在时刻 (a), s1 是 leader，在 term2 提交的日志只赋值到了 s1 s2 两个节点就 crash 了。在时刻（b), s5 成为了 term 3 的 leader，日志只赋值到了 s5，然后 crash。然后在 (c) 时刻，s1 又成为了 term 4 的 leader，开始赋值日志，于是把 term2 的日志复制到了 s3，此刻，可以看出 term2 对应的日志已经被复制到了 majority，因此是 committed，可以被状态机应用。不幸的是，接下来（d）时刻，s1 又 crash 了，s5 重新当选，然后将 term3 的日志复制到所有节点，这就出现了一种奇怪的现象：被复制到大多数节点（或者说可能已经应用）的日志被回滚。</p>
+<p><strong>如何杜绝：</strong></p>
+<p>也就是说，某个 leader 选举成功之后，不会直接提交前任 leader 时期的日志，而是通过提交当前任期的日志的时候 “顺手” 把之前的日志也提交了，具体怎么实现了，在 log matching 部分有详细介绍。那么问题来了，如果 leader 被选举后没有收到客户端的请求呢，论文中有提到，在任期开始的时候发立即尝试复制、提交一条空的 log</p>
+<h3 id="日志压缩">日志压缩</h3>
+<p>实际系统中，不能让日志无限增长，否则系统重启时需要很长时间进行回放，影响可用性</p>
+<p>Raft 采用对整个系统进行 snapshot 来解决，snapshot 之前的日志都可以丢弃。</p>
+<p>每个副本独立的对自己的系统状态进行 snapshot，并且只能对已经提交的日志记录进行 snapshot。</p>
+<p>snapshot 包含以下</p>
+<ul>
+<li>日志元数据。最后一条已提交的 log entry 的 log index 和 term，这两个值在 snapshot 之后的第一条 log entry 的 AppendEntries RPC 的完整性检查的时候会被用上</li>
+<li>系统当前状态</li>
+</ul>
+<p>当 Leader 要发给某个日志落后太多的 Follower 的 log entry 被丢弃，Leader 会将 snapshot 发给 Follower。或者当新加进一台机器时，也会发送 snapshot 给它。发送 snapshot 使用 InstalledSnapshot RPC</p>
+<p>做 snapshot 既不要做的太频繁，否则消耗磁盘带宽， 也不要做的太不频繁，否则一旦节点重启需要回放大量日志，影响可用性。推荐当日志达到某个固定的大小做一次 snapshot。</p>
+<p>做一次 snapshot 可能耗时过长，会影响正常日志同步。可以通过使用 copy-on-write 技术避免 snapshot 过程影响正常日志同步。</p>
+
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2023/02/27/coroutine/" data-toggle="tooltip" data-placement="top" title="协程">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2023/02/27/cpp/specification/" data-toggle="tooltip" data-placement="top" title="一些 c&#43;&#43; 规范">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+                
+
+                
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/cgroup" title="cgroup">
+                            cgroup
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                        <li><a target="_blank" href="https://gitee.com/icecream-jy">OwnDawn 的 gitee</a></li>
+                        
+                        <li><a target="_blank" href="https://github.com/IceCream-jy">OwnDawn 的 github</a></li>
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">                  
+                    
+                    <li>
+                        <a href="mailto:youremail@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/your%20wechat%20qr%20code%20image">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/yourgithub">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yourlinkedinid">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/yourstackoverflowid">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Owl Dawn" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Owl Dawn 2023
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+</body>
+</html>

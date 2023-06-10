@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <meta property="og:site_name" content="Owl Dawn">
+    <meta property="og:type" content="article">
+
+    
+    <meta property="og:image" content="/img/amiya.jpg">
+    <meta property="twitter:image" content="/img/amiya.jpg" />
+    
+
+    
+    <meta name="title" content="一些 c&#43;&#43; 规范" />
+    <meta property="og:title" content="一些 c&#43;&#43; 规范" />
+    <meta property="twitter:title" content="一些 c&#43;&#43; 规范" />
+    
+
+    
+    <meta name="description" content="OwlDawn，程序员, 动漫爱好者 | 这里是 OwlDawn 的博客，与你一起发现更大的世界。">
+    <meta property="og:description" content="OwlDawn，程序员, 动漫爱好者 | 这里是 OwlDawn 的博客，与你一起发现更大的世界。" />
+    <meta property="twitter:description" content="OwlDawn，程序员, 动漫爱好者 | 这里是 OwlDawn 的博客，与你一起发现更大的世界。" />
+    
+
+    
+    <meta property="twitter:card" content="summary" />
+    
+    
+
+    <meta name="keyword"  content="OwlDawn, OwlDawn的博客, 个人网站, 互联网, Web, 云原生, Kubernetes, 微服务, Microservice">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>一些 c&#43;&#43; 规范 | OwlDawn的博客 | OwlDawn Blog</title>
+
+    <link rel="canonical" href="/2023/02/27/cpp/specification/">
+
+    
+    
+    
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    
+    <link rel="stylesheet" href="/css/hugo-theme-cleanwhite.min.css">
+
+    
+    <link rel="stylesheet" href="/css/zanshang.css">
+
+    
+    <link href="https://cdn.jsdelivr.net/gh/FortAwesome/Font-Awesome@5.15.1/css/all.css" rel="stylesheet" type="text/css">
+
+    
+    
+
+    
+    <script src="/js/jquery.min.js"></script>
+
+    
+    <script src="/js/bootstrap.min.js"></script>
+
+    
+    <script src="/js/hux-blog.min.js"></script>
+
+    
+    <script src="/js/lazysizes.min.js"></script>
+
+    
+    
+
+</head>
+
+
+
+
+
+
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+
+    <div class="container-fluid">
+        
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Owl Dawn</a>
+        </div>
+
+        
+        
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">All Posts</a>
+                    </li>
+                    
+                        
+                        <li>
+                            <a href="/categories/ceph">ceph</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cgroup">cgroup</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/coroutine">coroutine</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/cpp">cpp</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/leveldb">leveldb</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/linux">linux</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/raft">raft</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/redis">redis</a>
+                        </li>
+                        
+                        <li>
+                            <a href="/categories/%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97">无锁队列</a>
+                        </li>
+                        
+                    
+                    
+		    
+                        <li><a href="/archive/">ARCHIVE</a></li>
+                    
+                        <li><a href="/notes/">NOTES</a></li>
+                    
+                        <li><a href="/about/">ABOUT</a></li>
+                    
+		            <li>
+                        <a href="/search"><i class="fa fa-search"></i></a>
+		           </li>
+                </ul>
+            </div>
+        </div>
+        
+    </div>
+    
+</nav>
+<script>
+    
+    
+    
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        
+            $navbar.className = " ";
+            
+            setTimeout(function(){
+                
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+
+
+<style type="text/css">
+    header.intro-header {
+        background-image: url('/img/amiya.jpg')
+    }
+</style>
+
+<header class="intro-header" >
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/cpp" title="cpp">
+                            cpp
+                        </a>
+                        
+                    </div>
+                    <h1>一些 c&#43;&#43; 规范</h1>
+                    <h2 class="subheading"></h2>
+                    <span class="meta">
+                        
+                            Posted by 
+                            
+                                OwlDawn
+                             
+                            on 
+                            Monday, February 27, 2023
+                            
+                            
+                            
+                            
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+
+<article>
+    <div class="container">
+        <div class="row">
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                
+                <h1 id="cpp-规范">cpp 规范</h1>
+<h4 id="尽量不要使用全局变量">尽量不要使用全局变量</h4>
+<p>编译器很难对全局做优化。可以将全局变量打包在一起，做成 Context 对象，全文传递</p>
+<h4 id="如果一定要用全局变量使用-static-修饰">如果一定要用全局变量，使用 static 修饰</h4>
+<p>使用 static 后，编译器确定变量不会被其他编译单元访问，可以做很多静态分析</p>
+<h4 id="使用-c17-stdstring_view-替换-stdstring">使用 c++17 std::string_view 替换 std::string</h4>
+<p>cpp17 引入 string_view 来优化 std::string 的性能。它本身不 own 内存，只维护了一个指针和长度。其本质是一个 const char* 指针，字符串常量的初始化建议使用 std::string_view</p>
+<h4 id="不要在头文件中定义容器对象">不要在头文件中定义容器对象</h4>
+<p>在容器中定义的对象会被创建出来，不管 cpp 里有没有用到。而且任何 include 该头文件所编译出来的 .o 文件中也会创建这些对象。即 链接出来的二进制中有很多份对象</p>
+<p>有时希望在头文件中定义让代码更一致，如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#ff79c6">static</span> <span style="color:#ff79c6">const</span> std<span style="color:#ff79c6">::</span>unordered_map<span style="color:#ff79c6">&lt;</span>std<span style="color:#ff79c6">::</span>string, <span style="color:#8be9fd">int</span><span style="color:#ff79c6">&gt;</span> map <span style="color:#ff79c6">=</span> {{<span style="color:#f1fa8c">&#34;asdf&#34;</span>, <span style="color:#bd93f9">4</span>}}
+</span></span></code></pre></div><p>​	这是一种低效的实现，所有 include 这个头文件的都会初始化该对象，在链接时，这些对象都会被链接进产物并做运行时初始化</p>
+<p>​	可以通过维护一个 def 文件来描述映射关系</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#ff79c6">#ifndef MAP
+</span></span></span><span style="display:flex;"><span><span style="color:#ff79c6">#defind MAP(x, y)
+</span></span></span><span style="display:flex;"><span><span style="color:#ff79c6">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#ff79c6"></span>MAP(asdf, <span style="color:#bd93f9">4</span>)
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">#undef MAP
+</span></span></span></code></pre></div><p>在需要该对象的地方，加上：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#ff79c6">const</span> std<span style="color:#ff79c6">::</span>unordered_map<span style="color:#ff79c6">&lt;</span>std<span style="color:#ff79c6">::</span>string, <span style="color:#8be9fd">int</span><span style="color:#ff79c6">&gt;</span> map <span style="color:#ff79c6">=</span> {
+</span></span><span style="display:flex;"><span><span style="color:#ff79c6">#define MAP(x, y) {#x, y},
+</span></span></span><span style="display:flex;"><span><span style="color:#ff79c6">#include</span> <span style="color:#ff79c6">&#34;xxx.def&#34;</span><span style="color:#ff79c6">
+</span></span></span><span style="display:flex;"><span><span style="color:#ff79c6"></span>}
+</span></span></code></pre></div><h4 id="多用-stdarray-而不是-stdvector">多用 std::array 而不是 std::vector</h4>
+<p>array 是分配在 栈 上，vector 分配在 堆 上，如果分配在堆上，分配和释放速度慢，且堆操作为动态，编译器优化是静态，无法知道内存情况，很难做优化</p>
+<h4 id="尽量避免指针的转换">尽量避免指针的转换</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#8be9fd">int</span> <span style="color:#50fa7b">foo</span>(<span style="color:#8be9fd">short</span><span style="color:#ff79c6">*</span> s, <span style="color:#8be9fd">int</span><span style="color:#ff79c6">*</span> i) {
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">*</span>i <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">1</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">*</span>s <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">2</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#ff79c6">return</span> <span style="color:#ff79c6">*</span>i;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#8be9fd">int</span> <span style="color:#50fa7b">main</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#8be9fd">int</span> x <span style="color:#ff79c6">=</span> <span style="color:#bd93f9">0</span>;
+</span></span><span style="display:flex;"><span>    x <span style="color:#ff79c6">=</span> foo((<span style="color:#8be9fd">short</span><span style="color:#ff79c6">*</span>)<span style="color:#ff79c6">&amp;</span>x, <span style="color:#ff79c6">&amp;</span>x);
+</span></span><span style="display:flex;"><span>    std<span style="color:#ff79c6">::</span>cout <span style="color:#ff79c6">&gt;&gt;</span> x;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#6272a4">// g++ a.cpp  输出 2
+</span></span></span><span style="display:flex;"><span><span style="color:#6272a4">// g++ a.cpp -O2  输出 1
+</span></span></span></code></pre></div><p>对 cast 完的指针做 deference 是 undefined behavior，编译器可能会对其做优化。编译器提供选项 <code>-fno-strict-aliasing</code> 来禁掉该优化，但是关掉 strict-aliasing 对程序性能有巨大影响</p>
+<ul>
+<li>
+<p>strict-aliasing</p>
+<p>编译器在做别名分析（aliasing analysis）时，需要知道两个指针所指向内存是否存在交叉。该信息决定了指令之间的依赖关系，以及一块内存是否重新 load</p>
+<p>如：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#282a36;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#8be9fd">int</span> a <span style="color:#ff79c6">=</span> <span style="color:#ff79c6">*</span>p;
+</span></span></code></pre></div></li>
+</ul>
+<h4 id="慎用异常">慎用异常</h4>
+<p>异常被设计出来应该是做极端情况的容错处理的，不应该用来处理代码逻辑</p>
+<ul>
+<li>对于不抛出异常的逻辑，为零开销</li>
+<li>如果抛出异常，运行库会做两次调用栈回溯，过程非常耗费时间</li>
+</ul>
+<p>x86 架构的一场实现本身不会对正常路径的程序性能有太多影响，但是会要求编译器在 eh_frame 中生成一些数据，会影响代码的 size，同时由于会插入很多代码处理异常发生情况，所以会影响 icache。如果确定代码中不会有异常，可以通过 <code>-fno-exceptions</code> 关掉</p>
+<h2 id="性能优化方法">性能优化方法</h2>
+<h4 id="cache-优化">cache 优化</h4>
+<p>写对性能友好的代码。相较于 CPU 的运算速度，内存访问耗时相当严重</p>
+<p>如 遍历二维数组注意循环中元素的读取顺序</p>
+<h4 id="cpu-优化">CPU 优化</h4>
+<ul>
+<li>
+<p>避免拷贝</p>
+<p>使用 emplace 簇函数</p>
+<p>定义移动构造函数和移动复制函数</p>
+<p>确认安全的前提下，使用 std::string_view 替代 std::string</p>
+</li>
+<li></li>
+</ul>
+<h4 id="函数签名">函数签名</h4>
+<p>函数名 + 参数个数 + 参数类型 + 参数顺序 + const cv</p>
+<h4 id="const_iterator-和-iterator">const_iterator 和 iterator</h4>
+<ul>
+<li>尽量使用 const_iterator 而不是 iterator</li>
+</ul>
+
+
+                
+
+                
+                <hr>
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2023/06/09/raft/" data-toggle="tooltip" data-placement="top" title="分布性一致算法">&larr;
+                            Previous Post</a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/redis/" data-toggle="tooltip" data-placement="top" title="redis">Next
+                            Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+                
+
+                
+
+
+
+            </div>
+
+            
+            
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+            
+
+            
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                        
+                        
+                        
+                        
+                        <a href="/tags/cgroup" title="cgroup">
+                            cgroup
+                        </a>
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                        
+                    </div>
+                </section>
+                
+
+                
+                
+                <section>
+                    <hr>
+                    <h5>FRIENDS</h5>
+                    <ul class="list-inline">
+                        
+                        <li><a target="_blank" href="https://gitee.com/icecream-jy">OwnDawn 的 gitee</a></li>
+                        
+                        <li><a target="_blank" href="https://github.com/IceCream-jy">OwnDawn 的 github</a></li>
+                        
+                    </ul>
+                </section>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">                  
+                    
+                    <li>
+                        <a href="mailto:youremail@gmail.com">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fas fa-envelope fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    
+                    
+
+		            
+                    
+                    <li>
+                        <a target="_blank" href="/your%20wechat%20qr%20code%20image">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-weixin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/yourgithub">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		            
+                    
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://www.linkedin.com/in/yourlinkedinid">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-linkedin fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+		           
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://stackoverflow.com/users/yourstackoverflowid">
+                            <span class="fa-stack fa-lg">
+                                <i class="fas fa-circle fa-stack-2x"></i>
+                                <i class="fab fa-stack-overflow fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    
+                    
+                    
+            
+            
+            
+           
+                   <li>
+                       <a href='' rel="alternate" type="application/rss+xml" title="Owl Dawn" >
+                           <span class="fa-stack fa-lg">
+                               <i class="fas fa-circle fa-stack-2x"></i>
+                               <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                           </span>
+                       </a>
+                   </li>
+            
+             </ul>
+		<p class="copyright text-muted">
+                    Copyright &copy; Owl Dawn 2023
+                    <br>
+                    <a href="https://themes.gohugo.io/hugo-theme-cleanwhite">CleanWhite Hugo Theme</a> by <a href="https://zhaohuabing.com">Huabing</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=zhaohuabing&repo=hugo-theme-cleanwhite&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+
+
+<script>
+    function loadAsync(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+
+
+
+
+<script>
+    
+    if($('#tag_cloud').length !== 0){
+        loadAsync("/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+
+<script>
+    loadAsync("https://cdn.jsdelivr.net/npm/fastclick@1.0.6/lib/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+
+
+
+
+<script type="text/javascript">
+    function generateCatalog(selector) {
+
+        
+        
+        
+        
+            _containerSelector = 'div.post-container'
+        
+
+        
+        var P = $(_containerSelector), a, n, t, l, i, c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+
+        
+        $(selector).html('')
+
+        
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#" + $(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="' + i + '" rel="nofollow">' + t + '</a>');
+            l = $('<li class="' + n + '_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    
+    $(".catalog-toggle").click((function (e) {
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    
+
+
+    loadAsync("\/js\/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+
+</body>
+</html>

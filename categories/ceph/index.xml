@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ceph on Owl Dawn</title>
+    <link>https://icecream-jy.github.io/categories/ceph/</link>
+    <description>Recent content in ceph on Owl Dawn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 10 Jun 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://icecream-jy.github.io/categories/ceph/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ceph</title>
+      <link>https://icecream-jy.github.io/ceph/</link>
+      <pubDate>Sat, 10 Jun 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/ceph/</guid>
+      <description>存储设备 DAS 直接附加存储 IDE，SATA，SCSI，SAS，USB NAS 网络附加存储 NFS，CIFS SAN SCSI，FC SAN，iSCSI HDFS Hadoop Distributed FileSystem 存在</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>无锁队列 on Owl Dawn</title>
+    <link>https://icecream-jy.github.io/tags/%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97/</link>
+    <description>Recent content in 无锁队列 on Owl Dawn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 09 Jun 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://icecream-jy.github.io/tags/%E6%97%A0%E9%94%81%E9%98%9F%E5%88%97/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>c&#43;&#43; 无锁队列</title>
+      <link>https://icecream-jy.github.io/2023/06/09/coroutine/</link>
+      <pubDate>Fri, 09 Jun 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/2023/06/09/coroutine/</guid>
+      <description>C++ 无锁队列 CAS 等原子操作 CAS操作 Compare &amp;amp; Set，或是 Compare &amp;amp; Swap 现在几乎所有的CPU指令都支持CAS的原子操作，X86下对应的是 CMPXCHG 汇编指令 bool compare_and_swap (int *addr, int oldval,</description>
+    </item>
+    
+  </channel>
+</rss>

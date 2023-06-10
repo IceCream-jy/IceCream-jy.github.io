@@ -6,14 +6,95 @@
     <description>Recent content in Posts on Owl Dawn</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 27 Feb 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://icecream-jy.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 10 Jun 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://icecream-jy.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ceph</title>
+      <link>https://icecream-jy.github.io/ceph/</link>
+      <pubDate>Sat, 10 Jun 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/ceph/</guid>
+      <description>存储设备 DAS 直接附加存储 IDE，SATA，SCSI，SAS，USB NAS 网络附加存储 NFS，CIFS SAN SCSI，FC SAN，iSCSI HDFS Hadoop Distributed FileSystem 存在</description>
+    </item>
+    
+    <item>
+      <title>c&#43;&#43; 无锁队列</title>
+      <link>https://icecream-jy.github.io/2023/06/09/coroutine/</link>
+      <pubDate>Fri, 09 Jun 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/2023/06/09/coroutine/</guid>
+      <description>C++ 无锁队列 CAS 等原子操作 CAS操作 Compare &amp;amp; Set，或是 Compare &amp;amp; Swap 现在几乎所有的CPU指令都支持CAS的原子操作，X86下对应的是 CMPXCHG 汇编指令 bool compare_and_swap (int *addr, int oldval,</description>
+    </item>
+    
     <item>
       <title>Cgroup</title>
       <link>https://icecream-jy.github.io/2023/02/27/cgroup/</link>
       <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
       
       <guid>https://icecream-jy.github.io/2023/02/27/cgroup/</guid>
-      <description>Cgroup v2 Control Groups，linux 内核提供的物力资源隔离机制，实现对 linux 进程或进程组的资源限制、隔离和统计 组成 cgroup 主要有两个组成部分： core - 负责分层组</description>
+      <description>Cgroup v2 Control Groups，linux 内核提供的物理资源隔离机制，实现对 linux 进程或进程组的资源限制、隔离和统计 功能： 资源限制 优先级控制：不同的组可以有</description>
+    </item>
+    
+    <item>
+      <title>Cgroup v1 和 v2 的区别</title>
+      <link>https://icecream-jy.github.io/2023/03/29/cgroup/v1v2/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/2023/03/29/cgroup/v1v2/</guid>
+      <description>Cgroup v1 和 v2 的区别 cgroup v1 允许任意数量的层次结构 v1 被弃用的核心功能 不支持包括命名层次在内的多个层次结构 不支持所有 v1 安装选项 tasks 文件被删除，cgroup</description>
+    </item>
+    
+    <item>
+      <title>LevelDB</title>
+      <link>https://icecream-jy.github.io/2023/02/27/leveldb/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/2023/02/27/leveldb/</guid>
+      <description>LevelDB 基本概念 log leveldb 的写操作不是直接写入磁盘，而是先写入内存。指 Write Ahead Log，参考 LevelDB 的文档 log_format.md。 在写内存前首先将所有写操作写到</description>
+    </item>
+    
+    <item>
+      <title>linux 文件系统</title>
+      <link>https://icecream-jy.github.io/fileSystem/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/fileSystem/</guid>
+      <description>Linux 文件系统 一切皆文件：不仅普通的文件和目录，就连块设备、管道、socket 等，也都是统一交给文件系统管理 数据结构 索引节点 index node 即 inode，记</description>
+    </item>
+    
+    <item>
+      <title>redis</title>
+      <link>https://icecream-jy.github.io/redis/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/redis/</guid>
+      <description>Redis_note 6.0.9 版本源码 数据结构 SDS 定义结构： struct __attribute__ ((__packed__)) sdshdr64 { uint64_t len; /* used 已使用的字节长度 */ uint64_t alloc; /* excluding the header and null terminator *///不包括头部和&amp;#39;\0&amp;#39;截止符 unsigned char</description>
+    </item>
+    
+    <item>
+      <title>一些 c&#43;&#43; 规范</title>
+      <link>https://icecream-jy.github.io/2023/02/27/cpp/specification/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/2023/02/27/cpp/specification/</guid>
+      <description>cpp 规范 尽量不要使用全局变量 编译器很难对全局做优化。可以将全局变量打包在一起，做成 Context 对象，全文传递 如果一定要用全局变量，使用 static 修饰 使用 static 后，编</description>
+    </item>
+    
+    <item>
+      <title>分布性一致算法</title>
+      <link>https://icecream-jy.github.io/2023/06/09/raft/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/2023/06/09/raft/</guid>
+      <description>分布式一致性算法 分布式一致性问题，简单的说，就是在一个或多个进程提议了一个值应当是什么后，使系统中所有进程对这个值达成一致意见。 如果在一个不</description>
+    </item>
+    
+    <item>
+      <title>协程</title>
+      <link>https://icecream-jy.github.io/2023/02/27/coroutine/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/2023/02/27/coroutine/</guid>
+      <description>协程 有栈 有栈协程和无栈协程根据它们存储上下文的机制来命名 有栈和无栈的不同之一为：==协程是否可以在其任意嵌套函数中被挂起，嵌套函数可理解为 子</description>
     </item>
     
     <item>
@@ -24,6 +105,15 @@
       <guid>https://icecream-jy.github.io/2023/02/026/hello-world/</guid>
       <description> “Yeah It&amp;rsquo;s on. ”
 Hello World! </description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://icecream-jy.github.io/post/2023-03-27-cpp17/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://icecream-jy.github.io/post/2023-03-27-cpp17/</guid>
+      <description>CPP17 结构化绑定 if-switch</description>
     </item>
     
   </channel>

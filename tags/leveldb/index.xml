@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>leveldb on Owl Dawn</title>
+    <link>https://icecream-jy.github.io/tags/leveldb/</link>
+    <description>Recent content in leveldb on Owl Dawn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 27 Feb 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://icecream-jy.github.io/tags/leveldb/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>LevelDB</title>
+      <link>https://icecream-jy.github.io/2023/02/27/leveldb/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/2023/02/27/leveldb/</guid>
+      <description>LevelDB 基本概念 log leveldb 的写操作不是直接写入磁盘，而是先写入内存。指 Write Ahead Log，参考 LevelDB 的文档 log_format.md。 在写内存前首先将所有写操作写到</description>
+    </item>
+    
+  </channel>
+</rss>

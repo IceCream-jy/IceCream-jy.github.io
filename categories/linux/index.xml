@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>linux on Owl Dawn</title>
+    <link>https://icecream-jy.github.io/categories/linux/</link>
+    <description>Recent content in linux on Owl Dawn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 27 Feb 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://icecream-jy.github.io/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>linux 文件系统</title>
+      <link>https://icecream-jy.github.io/fileSystem/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/fileSystem/</guid>
+      <description>Linux 文件系统 一切皆文件：不仅普通的文件和目录，就连块设备、管道、socket 等，也都是统一交给文件系统管理 数据结构 索引节点 index node 即 inode，记</description>
+    </item>
+    
+  </channel>
+</rss>

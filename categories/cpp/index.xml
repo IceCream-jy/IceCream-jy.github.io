@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cpp on Owl Dawn</title>
+    <link>https://icecream-jy.github.io/categories/cpp/</link>
+    <description>Recent content in cpp on Owl Dawn</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 09 Jun 2023 00:00:00 +0800</lastBuildDate><atom:link href="https://icecream-jy.github.io/categories/cpp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>c&#43;&#43; 无锁队列</title>
+      <link>https://icecream-jy.github.io/2023/06/09/coroutine/</link>
+      <pubDate>Fri, 09 Jun 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/2023/06/09/coroutine/</guid>
+      <description>C++ 无锁队列 CAS 等原子操作 CAS操作 Compare &amp;amp; Set，或是 Compare &amp;amp; Swap 现在几乎所有的CPU指令都支持CAS的原子操作，X86下对应的是 CMPXCHG 汇编指令 bool compare_and_swap (int *addr, int oldval,</description>
+    </item>
+    
+    <item>
+      <title>一些 c&#43;&#43; 规范</title>
+      <link>https://icecream-jy.github.io/2023/02/27/cpp/specification/</link>
+      <pubDate>Mon, 27 Feb 2023 00:00:00 +0800</pubDate>
+      
+      <guid>https://icecream-jy.github.io/2023/02/27/cpp/specification/</guid>
+      <description>cpp 规范 尽量不要使用全局变量 编译器很难对全局做优化。可以将全局变量打包在一起，做成 Context 对象，全文传递 如果一定要用全局变量，使用 static 修饰 使用 static 后，编</description>
+    </item>
+    
+  </channel>
+</rss>
