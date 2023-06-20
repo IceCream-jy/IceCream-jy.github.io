@@ -281,7 +281,7 @@
 <td>单值</td>
 <td>非根 cgroup，可读写</td>
 <td>通过将 &ldquo;threaded&rdquo; 写入该文件，将 cgroup 转换为线程 cgroup</td>
-<td>- domain: 正常的有效域 cgroup<!-- raw HTML omitted -->- domain threaded 线程子树根的线程域 cgroup<!-- raw HTML omitted -->- domain invalid: 无效的 cgroup<!-- raw HTML omitted -->- threaded: 线程 cgroup，线程子树</td>
+<td>- domain: 正常的有效域 cgroup<br>- domain threaded 线程子树根的线程域 cgroup<br>- domain invalid: 无效的 cgroup<br>- threaded: 线程 cgroup，线程子树</td>
 </tr>
 <tr>
 <td>cgroup.procs</td>
@@ -302,28 +302,28 @@
 <td>空格分隔</td>
 <td>所有 cgroup 都有; 可读写</td>
 <td>如果一个控制器在列表中出现不止一次，最后一个有效</td>
-<td>初始为空<!-- raw HTML omitted -->指定多个启用和禁用操作时，要么全部成功，要么全部失败。<!-- raw HTML omitted -->&quot;+&quot; 启用；&quot;-&quot; 禁用</td>
+<td>初始为空<br>指定多个启用和禁用操作时，要么全部成功，要么全部失败。<br>&quot;+&quot; 启用；&quot;-&quot; 禁用</td>
 </tr>
 <tr>
 <td>cgroup.events</td>
 <td></td>
 <td>非根 cgroup；只读</td>
 <td></td>
-<td>- populated: cgroup 及其子节点中包含活动进程，值为1；无活动进程，值为0<!-- raw HTML omitted -->- frozen: cgroup 是否被冻结，冻结值为1；未冻结值为0.</td>
+<td>- populated: cgroup 及其子节点中包含活动进程，值为1；无活动进程，值为0<br>- frozen: cgroup 是否被冻结，冻结值为1；未冻结值为0.</td>
 </tr>
 <tr>
 <td>cgroup.freeze</td>
 <td>单值</td>
 <td>所有 cgroup 都有; 可读写</td>
 <td>冻结 cgroup 及其所有子节点 cgroup，会将相关的进程关停并且不再运行</td>
-<td>默认值为0<!-- raw HTML omitted -->完成后 events 文件中的 “frozen” 值更新为 1<!-- raw HTML omitted -->冻结状态不会影响任何 cgroup 树操作（删除、创建等）</td>
+<td>默认值为0<br>完成后 events 文件中的 “frozen” 值更新为 1<br>冻结状态不会影响任何 cgroup 树操作（删除、创建等）</td>
 </tr>
 <tr>
 <td>cgroup.kill</td>
 <td>单值</td>
 <td>非根 cgroup 上；可读写</td>
 <td>将 cgroup 及其所有子节点中的 cgroup 杀死（进程会被 SIGKILL 杀掉）</td>
-<td>唯一允许值为1<!-- raw HTML omitted -->一般用于将一个 cgroup 树杀掉，防止叶子节点迁移</td>
+<td>唯一允许值为1<br>一般用于将一个 cgroup 树杀掉，防止叶子节点迁移</td>
 </tr>
 <tr>
 <td>cgroup.max.descendants</td>
@@ -351,7 +351,7 @@
 <td></td>
 <td>只读</td>
 <td></td>
-<td>- nr_descendants：可见后代的 cgroup 数量<!-- raw HTML omitted -->- nr_dying_descendants：被用户删除即将被系统销毁的 cgroup 数量</td>
+<td>- nr_descendants：可见后代的 cgroup 数量<br>- nr_dying_descendants：被用户删除即将被系统销毁的 cgroup 数量</td>
 </tr>
 </tbody>
 </table>
